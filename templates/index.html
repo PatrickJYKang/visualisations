@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Club Compare (Prototype)</title>
+  <style>
+    body { font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 2rem; background: #0e1117; color: #e2e6ef; }
+    .card { background: #11151c; border: 1px solid #2a2f3a; border-radius: 8px; padding: 1rem 1.25rem; max-width: 680px; margin: 0 auto; }
+    .card.wide { max-width: 1200px; }
+    a { color: #80b3ff; }
+    code { background: #0a0d12; padding: 2px 4px; border-radius: 4px; }
+    input, select { background: #0a0d12; color: #e2e6ef; border: 1px solid #2a2f3a; border-radius: 6px; padding: 8px 10px; width: 100%; }
+    label { font-size: 14px; color: #aeb6c2; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .mt { margin-top: 12px; }
+    .btn { background: #1c7ed6; color: white; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    #spinner { display: none; margin-left: 8px; }
+    #toast { display: none; margin-top: 12px; padding: 10px 12px; border-radius: 6px; border: 1px solid #2a2f3a; }
+    .team-card { background: #0f1319; border: 1px solid #2a2f3a; border-radius: 8px; padding: 12px; margin: 16px auto 0; }
+    .grid4 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .grid2 { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px; }
+    #results { display: grid; grid-template-columns: 1fr; gap: 16px; justify-items: center; }
+    /* Two columns for two teams on wider screens */
+    @media (min-width: 1000px) {
+      #results.two { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+  <script src="/static/main.js" defer></script>
+</head>
+<body>
+  <div class="card">
+    <h1>Club Compare (Prototype)</h1>
+    <p>Generate comparison visuals for one or two clubs. Start typing to get suggestions.</p>
+    <form id="genForm">
+      <div class="row">
+        <div>
+          <label for="teamA">Team A</label>
+          <input id="teamA" name="teamA" list="listA" placeholder="Arsenal" autocomplete="off" />
+          <datalist id="listA"></datalist>
+        </div>
+        <div>
+          <label for="teamB">Team B (optional)</label>
+          <input id="teamB" name="teamB" list="listB" placeholder="Chelsea" autocomplete="off" />
+          <datalist id="listB"></datalist>
+        </div>
+      </div>
+
+      <p class="mt" style="color:#aeb6c2">
+        Season is fixed to <strong>2025</strong>. Polar metric is fixed to <strong>per90</strong>.
+      </p>
+
+      <div class="row3 mt">
+        <label><input type="checkbox" id="genPolar" checked /> Generate Polar</label>
+        <label><input type="checkbox" id="genShot" checked /> Generate Shot Map</label>
+        <label><input type="checkbox" id="genSquad" checked /> Generate Squad Depth</label>
+      </div>
+
+      <div class="mt">
+        <button id="genBtn" class="btn" type="submit">Generate</button>
+        <span id="spinner">⏳</span>
+      </div>
+      <div id="toast"></div>
+    </form>
+
+    <div id="results" class="mt"></div>
+    <ul>
+      <li><strong>Search</strong>: <code>GET /api/search?q=arsenal</code></li>
+      <li><strong>Generate</strong>: <code>POST /api/generate</code> with JSON body:
+        <pre><code>{
+  "team_a": "Arsenal",
+  "team_b": "Chelsea",
+  "season": 2025,               // fixed by UI
+  "percentile_metric": "per90", // fixed by UI
+  "gen_polar": true,
+  "gen_shot": true,
+  "gen_squad": true
+}</code></pre>
+      </li>
+      <li>Generated images are served under <code>/images</code> from the <code>./cache_images</code> folder.</li>
+      <li>Static assets (CSS/JS) are served under <code>/static</code>.</li>
+    </ul>
+    <p class="mt">Run locally:</p>
+    <pre><code>uvicorn app.main:app --reload</code></pre>
+  </div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Ignore generated artifacts
+# Ignore cached files for now
+
+cache_csv/
+cache_images/
+test/
+
+# Common local noise
+.DS_Store
+__pycache__/
+*.pyc
+.env
+venv/
