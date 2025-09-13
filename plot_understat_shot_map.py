@@ -262,8 +262,11 @@ def plot_shot_map(csv_path: str,
 
     # Title and data source footer
     if title:
-        plt.suptitle(title, color='white', fontsize=18)
-    plt.gcf().text(0.01, 0.01, 'Data source: Understat via worldfootballR', color='#9aa4b2', fontsize=10)
+        plt.suptitle(title, color='white', fontsize=18, fontname='Arial')
+    # Align data source with the left edge of the map (axes), just below the plot
+    ax.text(0.0, -0.06, 'Data source: Understat via worldfootballR',
+            transform=ax.transAxes, ha='left', va='top',
+            color='#9aa4b2', fontsize=10, fontname='Arial', clip_on=False)
 
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     plt.savefig(out_path, bbox_inches='tight', facecolor='#000000')
